@@ -42,6 +42,9 @@ class AddContact extends Component {
     });
 
     dispatch({ type: 'ADD_CONTACT', payload: newContact });
+
+    // Redirect using history object
+    this.props.history.push('/');
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
