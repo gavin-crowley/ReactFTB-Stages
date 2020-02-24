@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Consumer } from '../../context';
+import axios from 'axios';
 
 class Contact extends Component {
   state = {
@@ -12,7 +13,11 @@ class Contact extends Component {
   };
 
   onDeleteClick = (id, dispatch) => {
-    dispatch({ type: 'DELETE_CONTACT', payload: id });
+    // Always going to fail because resource is not on server
+    axios
+      .delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+      .then(res => dispatch({ type: 'DELETE_CONTACT', payload: id }))
+      .catch(err => dispatch({ type: 'DELETE_CONTACT', payload: id }));
   };
 
   render() {
@@ -22,20 +27,18 @@ class Contact extends Component {
     return (
       <Consumer>
         {value => {
+          const { dispatch } = value;
           return (
             <div className="card card-body mb-3">
               <h4>
                 {name}{' '}
                 <i
                   onClick={this.onShowClick}
-                  className="fas fa-plus"
+                  className="fas fa-angle-down"
                   style={{ cursor: 'pointer' }}
                 />
                 <i
-                  // onClick={e =>
-                  //   value.dispatch({ type: 'DELETE_CONTACT', payload: id })
-                  // }
-                  onClick={this.onDeleteClick.bind(this, id, value.dispatch)}
+                  onClick={this.onDeleteClick.bind(this, id, dispatch)}
                   className="fas fa-times"
                   style={{ cursor: 'pointer', float: 'right', color: 'red' }}
                 />
